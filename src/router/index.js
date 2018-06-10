@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import Hello from '@/components/Hello'
+const Login = () => import('@/views/login.vue')
 const Header = () => import('@/views/header.vue')
 const Index = () => import('@/views/index.vue')
 const AddCustomer = () => import('@/views/addCustomer.vue')
@@ -16,6 +17,11 @@ export default new Router({
     //   component: Hello
     // },
     {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
       path: '/app',
       name: 'header',
       component: Header,
@@ -25,11 +31,11 @@ export default new Router({
           component: Index
         },
         {
-          path: '/addCustomer',
+          path: 'addCustomer',
           component: AddCustomer
         },
         {
-          path: '/customer',
+          path: 'customer',
           component: Customer
         }
       ]

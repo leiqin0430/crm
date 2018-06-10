@@ -5,7 +5,19 @@
       <div class="col-sm-7">
         <div class="row customer">
           <div class="col-sm-3">
-            <div class="integrity">48%</div>
+            <!--<div class="el-progress">-->
+              <!--<div style="width: 100%; height: 100%;">-->
+                <!--<svg viewBox="0 0 100 100">-->
+                  <!--<path d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" stroke="#e5e9f2" stroke-width="4.8" fill="none" class="el-progress-circle__track"></path>-->
+                  <!--<path d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" stroke-linecap="round" stroke="#20a0ff" stroke-width="4.8" fill="none" class="el-progress-circle__path" style="stroke-dasharray: 299.08px, 299.08px; stroke-dashoffset: 224.31px; transition: stroke-dashoffset 0.6s ease 0s, stroke 0.6s ease;"></path>-->
+                <!--</svg>-->
+              <!--</div>-->
+              <!--<div class="el-progress__text">25%</div>-->
+            <!--</div>-->
+            <svg id="circleProcess" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50%" cy="50%" r="40%" stroke-width="10%" stroke="#D1D3D7" fill="none" stroke-dashoffset="0%"></circle>
+              <circle id="circle" cx="50%" cy="50%" r="40%" stroke-width="10%"></circle>
+            </svg>
           </div>
           <div class="col-sm-9">
             <div class="row">
@@ -219,6 +231,14 @@
           desc: ''
         }
       }
+    },
+    mounted () {
+//      let circleProcess = document.getElementById('circleProcess')
+      let circle = document.getElementById('circle')
+//      let range = document.getElementById('range')
+      // 滑动条的值
+      let rangeValue = 250
+      circle.setAttribute('stroke-dashoffset', (255 - rangeValue) + '%')
     }
   }
 </script>
@@ -235,14 +255,47 @@
       padding: 1rem 0;
       margin: 0 0 1rem 0;
       border: 1px solid #dee2e6;
-      .integrity {
+      #circleProcess {
+        position: relative;
+        top: 0;
+        left: 0;
         width: 4rem;
         height: 4rem;
-        background-color: #34a853;
-        border-radius: 50%;
-        color: #ffffff;
-        text-align: center;
-        line-height: 4rem;
+        stroke-dasharray: 255%;
+        stroke-dashoffset: 255%;
+        stroke: #6FEC6F;
+        fill: none;
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+      .el-progress {
+        width: 4rem;
+        height: 4rem;
+        /*background-color: #34a853;*/
+        /*border-radius: 50%;*/
+        /*color: #ffffff;*/
+        /*text-align: center;*/
+        /*line-height: 4rem;*/
+        position: relative;
+        line-height: 1;
+        display: inline-block;
+        .el-progress__text {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          width: 100%;
+          text-align: center;
+          margin: 0;
+          transform: translateY(-50%);
+          font-size: 1rem;
+          color: #606266;
+          display: inline-block;
+          vertical-align: middle;
+          line-height: 1;
+        }
       }
     }
     .cus-container {
@@ -251,6 +304,7 @@
       border: 1px solid transparent;
       border-color: transparent #dee2e6 #dee2e6;
       border-top: none;
+      margin-bottom: 1rem;
     }
     .left-record {
       position: relative;
@@ -261,14 +315,18 @@
       .group-title {
         position: absolute;
         line-height: 2rem;
-        top: -1rem;
+        top: calc(-1rem - 1px);
         z-index: 1;
         background-color: #fff;
         border: 1px solid #dee2e6;
         color: $card-color-primary;
         font-weight: bold;
         padding: 0 .5rem;
+        border-radius: calc(1rem + 1px);
       }
+    }
+    .left-record:last-of-type {
+      margin-top: 1.8rem;
     }
   }
 </style>

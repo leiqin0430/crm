@@ -30,7 +30,8 @@
 </script>
 <style lang="scss" scoped>
   .header {
-    background-color: slateblue;
+    /*background-color: slateblue;*/
+    background-color: #7952B3;
     .left {
       display: flex;
       align-items: center;

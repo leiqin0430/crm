@@ -196,7 +196,7 @@
     },
     methods: {
       addCustomer () {
-        this.$router.push({path: '/customer'})
+        this.$router.push({path: '/app/addCustomer'})
       }
     }
   }
@@ -256,6 +256,7 @@
     border-bottom: none;
     a {
       color: #3c763d;
+      padding: .3rem .6rem;
     }
   }
   .nav-item-recommend {
@@ -265,6 +266,7 @@
     border-bottom: none;
     a {
       color: #31708f;
+      padding: .3rem .6rem;
     }
   }
   .message-list {
