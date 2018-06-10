@@ -14,10 +14,15 @@
               <!--</div>-->
               <!--<div class="el-progress__text">25%</div>-->
             <!--</div>-->
+            <div class="el-progress">
+            <div style="width: 100%; height: 100%;">
             <svg id="circleProcess" xmlns="http://www.w3.org/2000/svg">
               <circle cx="50%" cy="50%" r="40%" stroke-width="10%" stroke="#D1D3D7" fill="none" stroke-dashoffset="0%"></circle>
               <circle id="circle" cx="50%" cy="50%" r="40%" stroke-width="10%"></circle>
             </svg>
+            </div>
+            <div class="el-progress__text">25%</div>
+            </div>
           </div>
           <div class="col-sm-9">
             <div class="row">
@@ -237,7 +242,7 @@
       let circle = document.getElementById('circle')
 //      let range = document.getElementById('range')
       // 滑动条的值
-      let rangeValue = 250
+      let rangeValue = 63
       circle.setAttribute('stroke-dashoffset', (255 - rangeValue) + '%')
     }
   }
