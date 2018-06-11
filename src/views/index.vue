@@ -18,18 +18,32 @@
         <div class="card card-border-color card-border-color-dark">
           <h5 class="card-header">初步接洽</h5>
           <div class="card-body">
-            <b-table responsive striped small hover :items="tableData1.rows" :fields="fields1">
+            <b-table responsive striped small hover
+                     class="text-nowrap"
+                     :items="tableData1.rows"
+                     :fields="fields1"
+                     :current-page="currentPage"
+                     :per-page="perPage"
+                     @row-clicked="rowClicked">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
               </template>
             </b-table>
+            <div class="row">
+              <div class="col-sm-2">
+                <b-form-select :options="pageOptions" v-model="perPage" />
+              </div>
+              <div class="col-sm-6">
+                <b-pagination :total-rows="tableData1.total" :per-page="perPage" v-model="currentPage" class="my-0" />
+              </div>
+            </div>
           </div>
         </div>
         <div class="card card-border-color card-border-color-warning">
           <h5 class="card-header">长期跟进</h5>
           <div class="card-body">
-            <b-table responsive striped small hover :items="tableData1.rows" :fields="fields1">
+            <b-table responsive striped small hover class="text-nowrap" :items="tableData1.rows" :fields="fields1">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
@@ -40,7 +54,7 @@
         <div class="card card-border-color card-border-color-primary">
           <h5 class="card-header">明确需求</h5>
           <div class="card-body">
-            <b-table responsive striped small hover :items="tableData2.rows" :fields="fields2">
+            <b-table responsive striped small hover class="text-nowrap" :items="tableData2.rows" :fields="fields2">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
@@ -51,7 +65,7 @@
         <div class="card card-border-color card-border-color-danger">
           <h5 class="card-header">方案报价</h5>
           <div class="card-body">
-            <b-table responsive striped small hover :items="tableData2.rows" :fields="fields2">
+            <b-table responsive striped small hover class="text-nowrap" :items="tableData2.rows" :fields="fields2">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
@@ -62,7 +76,7 @@
         <div class="card card-border-color card-border-color-success">
           <h5 class="card-header">已成交</h5>
           <div class="card-body">
-            <b-table responsive striped small hover :items="tableData3.rows" :fields="fields3">
+            <b-table responsive striped small hover class="text-nowrap" :items="tableData3.rows" :fields="fields3">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
@@ -191,12 +205,18 @@
             {id: 3, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'},
             {id: 4, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'},
             {id: 5, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'}
-          ]}
+          ]},
+        currentPage: 1,
+        perPage: 2,
+        pageOptions: [ 2, 5, 10, 15 ]
       }
     },
     methods: {
       addCustomer () {
         this.$router.push({path: '/app/addCustomer'})
+      },
+      rowClicked (item, index, event) {
+        this.$router.push({path: '/app/customer'})
       }
     }
   }
@@ -219,30 +239,50 @@
     border-top-color: $card-color-dark;
     .card-header {
       color: $card-color-dark;
+      padding: .5rem 1rem;
+    }
+    .card-body {
+      padding: 0;
     }
   }
   .card-border-color-warning {
     border-top-color: $card-color-warning;
     .card-header {
       color: $card-color-warning;
+      padding: .5rem 1rem;
+    }
+    .card-body {
+      padding: 0;
     }
   }
   .card-border-color-primary {
     border-top-color: $card-color-primary;
     .card-header {
       color: $card-color-primary;
+      padding: .5rem 1rem;
+    }
+    .card-body {
+      padding: 0;
     }
   }
   .card-border-color-danger {
     border-top-color: $card-color-danger;
     .card-header {
       color: $card-color-danger;
+      padding: .5rem 1rem;
+    }
+    .card-body {
+      padding: 0;
     }
   }
   .card-border-color-success {
     border-top-color: $card-color-success;
     .card-header {
       color: $card-color-success;
+      padding: .5rem 1rem;
+    }
+    .card-body {
+      padding: 0;
     }
   }
 

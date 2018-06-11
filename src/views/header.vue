@@ -1,11 +1,11 @@
 <template>
   <div>
     <nav class="navbar header">
-      <div class="container-fluid">
+      <!--<div class="container-fluid">-->
         <a class="navbar-brand left" href="javascript:void(0)">
           <img class="img" src="../assets/logo.png" alt="">
           <div class="text">
-            <p class="ch">蜜游网营销管理系统</p>
+            <p class="ch">蜜游网管理系统</p>
             <p class="en">CUSTOMER FOLLOW-UP SYSTEM</p>
           </div>
         </a>
@@ -14,7 +14,7 @@
           <span>，欢迎登录</span>
           <i class="fas fa-power-off" @click="logout"></i>
         </div>
-      </div>
+      <!--</div>-->
     </nav>
     <router-view></router-view>
   </div>

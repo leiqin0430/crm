@@ -35,150 +35,185 @@
             </div>
           </div>
         </div>
-        <b-nav tabs>
-          <b-nav-item active>基本资料</b-nav-item>
-          <b-nav-item>订单信息</b-nav-item>
-        </b-nav>
-        <div class="cus-container">
-          <div class="cus-basicInfo">
-            <b-form>
-              <div class="row">
-                <div class="col-sm-7">
-                  <b-form-group label="客户类别:" horizontal>
-                    <b-form-checkbox-group id="checkboxes1" name="type" v-model="customer.type">
-                      <b-form-checkbox value="1">婚礼</b-form-checkbox>
-                      <b-form-checkbox value="2">婚拍</b-form-checkbox>
-                      <b-form-checkbox value="3">蜜月旅行</b-form-checkbox>
-                    </b-form-checkbox-group>
-                  </b-form-group>
-                </div>
-                <div class="col-sm-5">
-                  <b-form-group label="婚期:" horizontal>
-                    <b-form-input type="date"
-                                  v-model="customer.weddingDay"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12">
-                  <b-form-group label="意向目的地:" horizontal></b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-7">
-                  <b-form-group label="出发地:" horizontal>
-                    <b-form-input type="text"
-                                  v-model="customer.setOutPlace"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-                <div class="col-sm-5">
-                  <b-form-group label="酒店类型:" horizontal>
-                    <b-form-select v-model="customer.hotelType">
-                      <option :value="null">-请选择-</option>
-                      <option value="a">奢华五星</option>
-                      <option value="b">豪华四星</option>
-                      <option value="c">舒适三星及以下</option>
-                      <option value="d">民宿及特色酒店</option>
-                    </b-form-select>
-                  </b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-8">
-                  <b-form-group label="出行人数: 成人:" horizontal>
-                    <b-form-input type="number"
-                                  v-model="customer.travelNumber.adult"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-                <div class="col-sm-4">
-                  <b-form-group label="儿童:" horizontal>
-                    <b-form-input type="number"
-                                  v-model="customer.travelNumber.children"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-7">
-                  <b-form-group label="出行时间:" horizontal>
-                    <b-form-input type="date"
-                                  v-model="customer.travelTime.start"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-                <div class="col-sm-5">
-                  <b-form-group label="至" horizontal>
-                    <b-form-input type="date"
-                                  v-model="customer.travelTime.end"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-8">
-                  <b-form-group label="行程天数: 天:" horizontal>
-                    <b-form-input type="number"
-                                  v-model="customer.travelDays.day"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-                <div class="col-sm-4">
-                  <b-form-group label="晚:" horizontal>
-                    <b-form-input type="number"
-                                  v-model="customer.travelDays.night"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-7">
-                  <b-form-group label="预算:" horizontal>
-                    <b-form-input type="text"
-                                  v-model="customer.budget"
-                                  required>
-                    </b-form-input>
-                  </b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-7">
-                  <b-form-group label="备注:" horizontal>
-                    <b-form-textarea v-model="customer.desc"
-                                     placeholder="请输入需要注意的事项（非必填）"
-                                     :rows="3"
-                                     :max-rows="6">
-                    </b-form-textarea>
-                  </b-form-group>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-2">
-                  <label>报价记录:</label>
-                </div>
-                <div class="col-sm-10">
-                  <!--<b-form-group label="报价记录:" horizontal>-->
-                    <div>热辣普吉 蜜月之旅 7天5晚普吉岛动感体验之旅<span>￥21000</span></div>
-                    <div>浪漫蜜月·醉美普吉岛7天5晚双岛双酒店奢华蜜月之旅<span>￥23000</span></div>
-                  <!--</b-form-group>-->
-                  <div>
-                    <b-button type="button" variant="primary">报价</b-button>
+        <!--<b-nav tabs>-->
+          <!--<b-nav-item active>基本资料</b-nav-item>-->
+          <!--<b-nav-item>订单信息</b-nav-item>-->
+        <!--</b-nav>-->
+        <b-tabs>
+          <b-tab title="基本资料">
+            <div class="cus-container">
+              <b-form>
+                <div class="row">
+                  <div class="col-sm-7">
+                    <b-form-group label="客户类别:" horizontal>
+                      <b-form-checkbox-group id="checkboxes1" name="type" v-model="customer.type">
+                        <b-form-checkbox value="1">婚礼</b-form-checkbox>
+                        <b-form-checkbox value="2">婚拍</b-form-checkbox>
+                        <b-form-checkbox value="3">蜜月旅行</b-form-checkbox>
+                      </b-form-checkbox-group>
+                    </b-form-group>
+                  </div>
+                  <div class="col-sm-5">
+                    <b-form-group label="婚期:" horizontal>
+                      <b-form-input type="date"
+                                    v-model="customer.weddingDay"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
                   </div>
                 </div>
-              </div>
-            </b-form>
-          </div>
-        </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <b-form-group label="意向目的地:" horizontal></b-form-group>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-7">
+                    <b-form-group label="出发地:" horizontal>
+                      <b-form-input type="text"
+                                    v-model="customer.setOutPlace"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                  <div class="col-sm-5">
+                    <b-form-group label="酒店类型:" horizontal>
+                      <b-form-select v-model="customer.hotelType">
+                        <option :value="null">-请选择-</option>
+                        <option value="a">奢华五星</option>
+                        <option value="b">豪华四星</option>
+                        <option value="c">舒适三星及以下</option>
+                        <option value="d">民宿及特色酒店</option>
+                      </b-form-select>
+                    </b-form-group>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-8">
+                    <b-form-group label="出行人数: 成人:" horizontal>
+                      <b-form-input type="number"
+                                    v-model="customer.travelNumber.adult"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                  <div class="col-sm-4">
+                    <b-form-group label="儿童:" horizontal>
+                      <b-form-input type="number"
+                                    v-model="customer.travelNumber.children"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-7">
+                    <b-form-group label="出行时间:" horizontal>
+                      <b-form-input type="date"
+                                    v-model="customer.travelTime.start"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                  <div class="col-sm-5">
+                    <b-form-group label="至" horizontal>
+                      <b-form-input type="date"
+                                    v-model="customer.travelTime.end"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-8">
+                    <b-form-group label="行程天数: 天:" horizontal>
+                      <b-form-input type="number"
+                                    v-model="customer.travelDays.day"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                  <div class="col-sm-4">
+                    <b-form-group label="晚:" horizontal>
+                      <b-form-input type="number"
+                                    v-model="customer.travelDays.night"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-7">
+                    <b-form-group label="预算:" horizontal>
+                      <b-form-input type="text"
+                                    v-model="customer.budget"
+                                    required>
+                      </b-form-input>
+                    </b-form-group>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-7">
+                    <b-form-group label="备注:" horizontal>
+                      <b-form-textarea v-model="customer.desc"
+                                       placeholder="请输入需要注意的事项（非必填）"
+                                       :rows="3"
+                                       :max-rows="6">
+                      </b-form-textarea>
+                    </b-form-group>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-2">
+                    <label>报价记录:</label>
+                  </div>
+                  <div class="col-sm-10">
+                    <!--<b-form-group label="报价记录:" horizontal>-->
+                    <div>热辣普吉 蜜月之旅 7天5晚普吉岛动感体验之旅<span>￥21000</span></div>
+                    <div>浪漫蜜月·醉美普吉岛7天5晚双岛双酒店奢华蜜月之旅<span>￥23000</span></div>
+                    <!--</b-form-group>-->
+                    <div>
+                      <b-button type="button" variant="primary">报价</b-button>
+                    </div>
+                  </div>
+                </div>
+              </b-form>
+            </div>
+          </b-tab>
+          <b-tab title="订单信息">
+            <div class="cus-container">
+              <b-form>
+                <b-container>
+                <b-row>
+                  <b-col cols="2">
+                    <label>目的地:</label>
+                  </b-col>
+                  <b-col cols="10">
+                    <b-form-input id="nestedStreet"></b-form-input>
+                  </b-col>
+                </b-row>
+                </b-container>
+
+                <div class="row">
+                  <div class="col-xs-3">
+                    <b-form-group horizontal
+                                  label="State:"
+                                  label-for="nestedState">
+                      <b-form-input id="nestedState"></b-form-input>
+                    </b-form-group>
+                  </div>
+                  <div class="col-xs-9">
+                    <b-form-group horizontal
+                                  label="Country:"
+                                  label-for="nestedCountry">
+                      <b-form-input id="nestedCountry"></b-form-input>
+                    </b-form-group>
+                  </div>
+                </div>
+              </b-form>
+            </div>
+          </b-tab>
+        </b-tabs>
       </div>
       <div class="col-sm-5">
         <div class="left-record">
