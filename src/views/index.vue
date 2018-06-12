@@ -233,7 +233,7 @@
     margin-bottom: 1rem;
   }
   .card-border-color {
-    border-top: 3px solid #c9c9c9;
+    border-top: .26rem solid #c9c9c9;
   }
   .card-border-color-dark {
     border-top-color: $card-color-dark;
