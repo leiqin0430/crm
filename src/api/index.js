@@ -1,20 +1,20 @@
 import HttpConfig from '@/bean/HttpConfig'
 import httpService from '@/common/httpService'
 
-export const getWxUserInfo = (params, fn1, fn2) => {
+export const addCustomer = (params, fn1, fn2) => {
   return httpService(new HttpConfig({
-    url: '/made/getWxUserInfo/' + params.code,
-    method: 'get',
-    reminder: false,
+    url: '/cus/new',
+    method: 'post',
+    params: params,
+    reminder: true,
     success: fn1,
     error: fn2
   }))
 }
-
-export const getMediaInfo = (params, fn1, fn2) => {
+export const getCusDetail = (params, fn1, fn2) => {
   return httpService(new HttpConfig({
-    url: '/made/get',
-    method: 'post',
+    url: '/cus/detail',
+    method: 'get',
     params: params,
     reminder: false,
     success: fn1,

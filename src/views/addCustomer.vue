@@ -2,56 +2,59 @@
   <div class="container customer-form" :style="{width: pcFlag?'40%':'85%'}">
   <!--<div class="container customer-form">-->
     <b-form @submit="onSubmit" @reset="onReset">
-      <b-form-group id="exampleInputGroup1"
-                    label="姓名:"
-                    label-for="exampleInput1">
-        <b-form-input id="exampleInput1"
-                      type="text"
+      <b-form-group label="姓名:">
+        <b-form-input type="text"
                       v-model="customer.name"
                       required
                       placeholder="请输入姓名">
         </b-form-input>
       </b-form-group>
-      <b-form-group id="exampleInputGroup2"
-                    label="来源:"
-                    label-for="exampleInput2">
-        <b-form-input id="exampleInput2"
-                      type="text"
-                      v-model="customer.from"
-                      required
-                      placeholder="请输入来源">
-        </b-form-input>
+      <b-form-group label="性别:">
+        <!--<b-form-radio-group id="exampleChecks"-->
+        <!--v-model="customer.gender"-->
+        <!--:options="options">-->
+        <!--</b-form-radio-group>-->
+        <b-form-radio-group v-model="customer.sex">
+          <b-form-radio value="1">男</b-form-radio>
+          <b-form-radio value="0">女</b-form-radio>
+        </b-form-radio-group>
       </b-form-group>
-      <b-form-group id="exampleInputGroup3"
-                    label="微信:"
-                    label-for="exampleInput3">
-        <b-form-input id="exampleInput3"
-                      type="text"
-                      v-model="customer.wx"
-                      required
-                      placeholder="请输入微信">
-        </b-form-input>
-      </b-form-group>
-      <b-form-group id="exampleInputGroup4"
-                    label="电话:"
-                    label-for="exampleInput4">
-        <b-form-input id="exampleInput4"
-                      type="tel"
+      <b-form-group label="电话:">
+        <b-form-input type="tel"
                       v-model="customer.tel"
                       required
                       placeholder="请输入电话">
         </b-form-input>
       </b-form-group>
-      <b-form-group id="exampleGroup2" label="性别:">
-        <!--<b-form-radio-group id="exampleChecks"-->
-                            <!--v-model="customer.gender"-->
-                            <!--:options="options">-->
-        <!--</b-form-radio-group>-->
-        <b-form-radio-group id="exampleChecks"
-                            v-model="customer.gender">
-          <b-form-radio value="1">男</b-form-radio>
-          <b-form-radio value="2">女</b-form-radio>
-        </b-form-radio-group>
+      <b-form-group label="微信号:">
+        <b-form-input type="text"
+                      v-model="customer.wxId"
+                      required
+                      placeholder="请输入微信号">
+        </b-form-input>
+      </b-form-group>
+      <b-form-group label="微信昵称:">
+        <b-form-input type="text"
+                      v-model="customer.wxNickname"
+                      required
+                      placeholder="请输入微信昵称">
+        </b-form-input>
+      </b-form-group>
+      <b-form-group label="客户来源:">
+        <b-form-input type="text"
+                      v-model="customer.comeFrom"
+                      required
+                      placeholder="请输入客户来源">
+        </b-form-input>
+      </b-form-group>
+      <b-form-group label="行程类型:">
+        <b-form-checkbox-group v-model="customer.tripType">
+          <b-form-checkbox value="1">婚礼</b-form-checkbox>
+          <b-form-checkbox value="2">婚拍</b-form-checkbox>
+          <b-form-checkbox value="3">度蜜月</b-form-checkbox>
+          <b-form-checkbox value="4">亲子</b-form-checkbox>
+          <b-form-checkbox value="5">旅行</b-form-checkbox>
+        </b-form-checkbox-group>
       </b-form-group>
       <div class="btn-container">
         <b-button type="submit" variant="primary" class="btn-save">保存</b-button>
@@ -62,29 +65,34 @@
 </template>
 <script>
   import {isPC} from '@/common/utils'
+  import {addCustomer} from '@/api/index'
   export default {
     data () {
       return {
         pcFlag: true,
         customer: {
           name: '',
-          from: '',
-          wx: '',
+          sex: 1,
           tel: '',
-          gender: '1'
-        },
-        options: [
-          { text: '男', value: '1' },
-          { text: '女', value: '2' }
-        ]
+          wxId: '',
+          wxNickname: '',
+          comeFrom: '',
+          tripType: []
+        }
       }
     },
     mounted () {
       this.pcFlag = isPC()
     },
     methods: {
-      onSubmit () {
-        console.log('提交')
+      onSubmit (evt) {
+        evt.preventDefault()
+        // 深拷贝对象
+        let obj = {...this.customer}
+        obj.tripType = obj.tripType.join(',')
+        addCustomer(obj, (data) => {
+          this.$router.push({path: '/app/customer', query: data.result})
+        })
       },
       onReset () {
         this.$router.push({path: '/app/index'})

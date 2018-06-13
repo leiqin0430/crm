@@ -6,19 +6,21 @@ import httpService from '@/common/httpService'
 
 export const login = (params, fn1, fn2) => {
   return httpService(new HttpConfig({
-    url: '/made/get',
+    url: '/sys/login',
     method: 'post',
     params: params,
-    reminder: false,
+    reminder: true,
     success: fn1,
     error: fn2
   }))
 }
+
 export const logout = (params, fn1, fn2) => {
   return httpService(new HttpConfig({
-    url: '/made/getWxUserInfo/' + params.code,
+    url: '/sys/logout',
     method: 'get',
-    reminder: false,
+    params: params,
+    reminder: true,
     success: fn1,
     error: fn2
   }))

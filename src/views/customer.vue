@@ -25,54 +25,67 @@
             </div>
           </div>
           <div class="col-sm-10">
-            <div class="row mb-2">
-              <div class="col-sm-6 mb-2">
-                <b-form-row>
-                  <b-col cols="2"><label class="col-form-label">姓名:</label></b-col>
-                  <b-col cols="10">
-                    <b-form-input type="text"
-                                  v-model="customer.name"
-                                  required>
-                    </b-form-input>
-                  </b-col>
-                </b-form-row>
-              </div>
+            <div class="row">
               <div class="col-sm-6">
-                <b-form-row>
-                  <b-col cols="2"><label class="col-form-label">来源:</label></b-col>
-                  <b-col cols="10">
-                    <b-form-input type="text"
-                                  v-model="customer.from"
-                                  required>
-                    </b-form-input>
-                  </b-col>
-                </b-form-row>
+                <span>姓名:</span>
+                <span>雷芹</span>
+                <i class="fas fa-venus"></i>
+                <i class="fas fa-mars"></i>
               </div>
+              <div class="col-sm-6"></div>
             </div>
             <div class="row">
-              <div class="col-sm-6 mb-2">
-                <b-form-row>
-                  <b-col cols="2"><label class="col-form-label">微信:</label></b-col>
-                  <b-col cols="10">
-                    <b-form-input type="text"
-                                  v-model="customer.wx"
-                                  required>
-                    </b-form-input>
-                  </b-col>
-                </b-form-row>
-              </div>
-              <div class="col-sm-6">
-                <b-form-row>
-                  <b-col cols="2"><label class="col-form-label">电话:</label></b-col>
-                  <b-col cols="10">
-                    <b-form-input type="tel"
-                                  v-model="customer.tel"
-                                  required>
-                    </b-form-input>
-                  </b-col>
-                </b-form-row>
-              </div>
+              <div class="col-sm-6"></div>
+              <div class="col-sm-6"></div>
             </div>
+            <!--<div class="row mb-2">-->
+              <!--<div class="col-sm-6 mb-2">-->
+                <!--<b-form-row>-->
+                  <!--<b-col cols="2"><label class="col-form-label">姓名:</label></b-col>-->
+                  <!--<b-col cols="10">-->
+                    <!--<b-form-input type="text"-->
+                                  <!--v-model="cusInfo.name"-->
+                                  <!--required>-->
+                    <!--</b-form-input>-->
+                  <!--</b-col>-->
+                <!--</b-form-row>-->
+              <!--</div>-->
+              <!--<div class="col-sm-6">-->
+                <!--<b-form-row>-->
+                  <!--<b-col cols="2"><label class="col-form-label">来源:</label></b-col>-->
+                  <!--<b-col cols="10">-->
+                    <!--<b-form-input type="text"-->
+                                  <!--v-model="cusIntention.comeFrom"-->
+                                  <!--required>-->
+                    <!--</b-form-input>-->
+                  <!--</b-col>-->
+                <!--</b-form-row>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row">-->
+              <!--<div class="col-sm-6 mb-2">-->
+                <!--<b-form-row>-->
+                  <!--<b-col cols="2"><label class="col-form-label">微信:</label></b-col>-->
+                  <!--<b-col cols="10">-->
+                    <!--<b-form-input type="text"-->
+                                  <!--v-model="customer.wx"-->
+                                  <!--required>-->
+                    <!--</b-form-input>-->
+                  <!--</b-col>-->
+                <!--</b-form-row>-->
+              <!--</div>-->
+              <!--<div class="col-sm-6">-->
+                <!--<b-form-row>-->
+                  <!--<b-col cols="2"><label class="col-form-label">电话:</label></b-col>-->
+                  <!--<b-col cols="10">-->
+                    <!--<b-form-input type="tel"-->
+                                  <!--v-model="customer.tel"-->
+                                  <!--required>-->
+                    <!--</b-form-input>-->
+                  <!--</b-col>-->
+                <!--</b-form-row>-->
+              <!--</div>-->
+            <!--</div>-->
           </div>
         </div>
         <b-tabs>
@@ -81,11 +94,13 @@
               <b-form>
                 <div class="row">
                   <div class="col-sm-7">
-                    <b-form-group label="客户类别:" horizontal>
+                    <b-form-group label="行程类型:" horizontal>
                       <b-form-checkbox-group id="checkboxes1" name="type" v-model="customer.type">
                         <b-form-checkbox value="1">婚礼</b-form-checkbox>
                         <b-form-checkbox value="2">婚拍</b-form-checkbox>
-                        <b-form-checkbox value="3">蜜月旅行</b-form-checkbox>
+                        <b-form-checkbox value="3">度蜜月</b-form-checkbox>
+                        <b-form-checkbox value="4">亲子</b-form-checkbox>
+                        <b-form-checkbox value="5">旅行</b-form-checkbox>
                       </b-form-checkbox-group>
                     </b-form-group>
                   </div>
@@ -316,7 +331,7 @@
                   </b-form-row>
                 </b-form-group>
                 <div class="card card-border-color card-border-color-dark">
-                  <h5 class="card-header">客人基本信息</h5>
+                  <h5 class="card-header">出行客人信息</h5>
                   <div class="card-body">
                     <b-table responsive small hover class="text-nowrap" :items="tableData1.rows" :fields="fields1">
                     </b-table>
@@ -453,6 +468,7 @@
   </div>
 </template>
 <script>
+  import {getCusDetail} from '@/api/index'
   export default {
     data () {
       let fields1 = [
@@ -478,6 +494,9 @@
         {key: 'checkInTime', label: '入住时间'}
       ]
       return {
+        resultData: null,
+        cusInfo: null,
+        cusIntention: null,
         fields1: fields1,
         fields2: fields2,
         fields3: fields3,
@@ -513,6 +532,17 @@
       }
     },
     mounted () {
+      // {cusInfoId: 6, cusIntentionId: 4}
+      // let paramObj = this.$route.query
+      let paramObj = {cusInfoId: 6, cusIntentionId: 4}
+      getCusDetail(paramObj, (data) => {
+        console.log(data)
+        if (data.result) {
+          this.resultData = data.result
+          this.cusInfo = {...this.resultData.cusInfo}
+          this.cusIntention = {...this.resultData.cusIntention}
+        }
+      })
 //      let circleProcess = document.getElementById('circleProcess')
       let circle = document.getElementById('circle')
 //      let range = document.getElementById('range')
@@ -626,53 +656,53 @@
     margin-bottom: 1rem;
   }
   .card-border-color {
-    border-top: .26rem solid #c9c9c9;
+    /*border-top: .26rem solid #c9c9c9;*/
   }
   .card-border-color-dark {
-    border-top-color: $card-color-dark;
+    /*border-top-color: $card-color-dark;*/
   .card-header {
     color: $card-color-dark;
-    padding: .5rem 1rem;
+    padding: .3rem .6rem;
   }
   .card-body {
     padding: 0;
   }
   }
   .card-border-color-warning {
-    border-top-color: $card-color-warning;
+    /*border-top-color: $card-color-warning;*/
   .card-header {
     color: $card-color-warning;
-    padding: .5rem 1rem;
+    padding: .3rem .6rem;
   }
   .card-body {
     padding: 0;
   }
   }
   .card-border-color-primary {
-    border-top-color: $card-color-primary;
+    /*border-top-color: $card-color-primary;*/
   .card-header {
     color: $card-color-primary;
-    padding: .5rem 1rem;
+    padding: .3rem .6rem;
   }
   .card-body {
     padding: 0;
   }
   }
   .card-border-color-danger {
-    border-top-color: $card-color-danger;
+    /*border-top-color: $card-color-danger;*/
   .card-header {
     color: $card-color-danger;
-    padding: .5rem 1rem;
+    padding: .3rem .6rem;
   }
   .card-body {
     padding: 1rem 1rem 0 1rem;
   }
   }
   .card-border-color-success {
-    border-top-color: $card-color-success;
+    /*border-top-color: $card-color-success;*/
   .card-header {
     color: $card-color-success;
-    padding: .5rem 1rem;
+    padding: .3rem .6rem;
   }
   .card-body {
     padding: 0;

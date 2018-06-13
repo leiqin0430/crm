@@ -11,10 +11,10 @@ axios.interceptors.request.use(function (config) {
   // Do something before request is sent
 
   // Alter defaults after instance has been created
-  // let user = JSON.parse(localStorage.getItem('meyouone_user_info'))
-  // if (user) {
-  //   config.headers.common['mitu'] = user.userInfo.token
-  // }
+  let user = JSON.parse(localStorage.getItem('meyouone_crm_userInfo'))
+  if (user) {
+    config.headers.common['mitu'] = user.userInfo.token
+  }
   return config
 }, function (error) {
   // Do something with request error

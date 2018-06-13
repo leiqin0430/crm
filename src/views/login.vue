@@ -34,14 +34,14 @@
               </div>
               <b-form-group label="账号:" class="mb-4">
                 <b-form-input type="text"
-                              v-model="form.account"
+                              v-model="loginForm.account"
                               required
                               placeholder="请输入账号">
                 </b-form-input>
               </b-form-group>
               <b-form-group label="密码:" class="mb-4">
                 <b-form-input type="password"
-                              v-model="form.password"
+                              v-model="loginForm.password"
                               required
                               placeholder="请输入密码">
                 </b-form-input>
@@ -58,11 +58,11 @@
   </main>
 </template>
 <script>
-//  import {login} from '@/api/login'
+ import {login} from '@/api/login'
   export default {
     data () {
       return {
-        form: {
+        loginForm: {
           account: '',
           password: ''
         }
@@ -71,12 +71,16 @@
     methods: {
       onSubmit (evt) {
         evt.preventDefault()
-        this.$router.push({path: '/app/index'})
+        login({username: this.loginForm.account, password: this.loginForm.password}, (data) => {
+          // console.log(data.result)
+          localStorage.setItem('meyouone_crm_userInfo', JSON.stringify(data.result))
+          this.$router.push({path: '/app/index'})
+        })
       },
       onReset (evt) {
         evt.preventDefault()
-        this.form.account = ''
-        this.form.password = ''
+        this.loginForm.account = ''
+        this.loginForm.password = ''
       }
     }
   }

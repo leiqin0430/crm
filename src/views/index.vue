@@ -4,7 +4,7 @@
       <div class="col-sm-9">
         <div class="row search-container">
           <div class="col-sm-6">
-            <button type="button" class="btn btn-primary" @click="addCustomer"><i class="fas fa-plus"></i><span>新客户接入</span></button>
+            <button type="button" class="btn btn-primary" @click="openNewCusModal"><i class="fas fa-plus"></i><span>新客户接入</span></button>
           </div>
           <div class="col-sm-6">
             <div class="input-group">
@@ -135,9 +135,77 @@
         <!--</div>-->
       </div>
     </div>
+    <!--新客户接入modal-->
+    <b-modal ref="newCusModal"
+             centered
+             title="填写客户信息">
+      <b-form>
+        <b-form-group label="姓名:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.name"
+                        required
+                        placeholder="请输入姓名">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="性别:"
+                      horizontal>
+          <b-form-radio-group v-model="customer.sex"
+                              :options="[{text:'男',value:1},{text:'女',value:0}]">
+          </b-form-radio-group>
+        </b-form-group>
+        <b-form-group label="电话:"
+                      horizontal>
+          <b-form-input type="tel"
+                        v-model="customer.tel"
+                        required
+                        placeholder="请输入电话">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="微信号:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.wxId"
+                        required
+                        placeholder="请输入微信号">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="微信昵称:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.wxNickname"
+                        required
+                        placeholder="请输入微信昵称">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="客户来源:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.comeFrom"
+                        required
+                        placeholder="请输入客户来源">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="行程类型:"
+                      horizontal>
+          <b-form-checkbox-group v-model="customer.tripType">
+            <b-form-checkbox value="1">婚礼</b-form-checkbox>
+            <b-form-checkbox value="2">婚拍</b-form-checkbox>
+            <b-form-checkbox value="3">度蜜月</b-form-checkbox>
+            <b-form-checkbox value="4">亲子</b-form-checkbox>
+            <b-form-checkbox value="5">旅行</b-form-checkbox>
+          </b-form-checkbox-group>
+        </b-form-group>
+      </b-form>
+      <div slot="modal-footer">
+        <b-btn type="button" variant="default" @click="closeNewCusModal">取消</b-btn>
+        <b-btn type="button" variant="primary" @click="saveNewCus">确定</b-btn>
+      </div>
+    </b-modal>
   </div>
 </template>
 <script>
+  import {addCustomer} from '@/api/index'
   export default {
     data () {
       let fields1 = [
@@ -179,6 +247,15 @@
         {key: 'desc', label: '特别说明'}
       ]
       return {
+        customer: {
+          name: '',
+          sex: 1,
+          tel: '',
+          wxId: '',
+          wxNickname: '',
+          comeFrom: '',
+          tripType: []
+        },
         fields1: fields1,
         fields2: fields2,
         fields3: fields3,
@@ -212,11 +289,26 @@
       }
     },
     methods: {
-      addCustomer () {
-        this.$router.push({path: '/app/addCustomer'})
-      },
+      // addCustomer () {
+      //   this.$router.push({path: '/app/addCustomer'})
+      // },
       rowClicked (item, index, event) {
         this.$router.push({path: '/app/customer'})
+      },
+      openNewCusModal () {
+        this.$refs.newCusModal.show()
+      },
+      closeNewCusModal () {
+        this.$refs.newCusModal.hide()
+      },
+      saveNewCus (evt) {
+        evt.preventDefault()
+        // 深拷贝对象
+        let obj = {...this.customer}
+        obj.tripType = obj.tripType.join(',')
+        addCustomer(obj, (data) => {
+          this.$router.push({path: '/app/customer', query: data.result})
+        })
       }
     }
   }
