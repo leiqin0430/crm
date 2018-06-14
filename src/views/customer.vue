@@ -3,7 +3,7 @@
     <div class="page-title">客户详情</div>
     <div class="row">
       <div class="col-sm-7">
-        <div class="row customer">
+        <div class="row customer" @click="openNewCusModal">
           <div class="col-sm-2 progress-col">
             <!--<div class="el-progress">-->
               <!--<div style="width: 100%; height: 100%;">-->
@@ -27,65 +27,33 @@
           <div class="col-sm-10">
             <div class="row">
               <div class="col-sm-6">
-                <span>姓名:</span>
+                <label>姓名:</label>
                 <span>雷芹</span>
-                <i class="fas fa-venus"></i>
-                <i class="fas fa-mars"></i>
+                <i class="fas fa-venus" style="font-size: 1rem; color: #ea4335;"></i>
               </div>
-              <div class="col-sm-6"></div>
+              <div class="col-sm-6">
+                <label>来源:</label>
+                <span>马蜂窝</span>
+              </div>
             </div>
             <div class="row">
-              <div class="col-sm-6"></div>
-              <div class="col-sm-6"></div>
+              <div class="col-sm-6">
+                <label>微信:</label>
+                <span>芹芹（leiq）</span>
+              </div>
+              <div class="col-sm-6">
+                <label>电话:</label>
+                <span>18628372806</span>
+                <span style="background-color: #34a853; color: #ffffff;">四川成都</span>
+              </div>
             </div>
-            <!--<div class="row mb-2">-->
-              <!--<div class="col-sm-6 mb-2">-->
-                <!--<b-form-row>-->
-                  <!--<b-col cols="2"><label class="col-form-label">姓名:</label></b-col>-->
-                  <!--<b-col cols="10">-->
-                    <!--<b-form-input type="text"-->
-                                  <!--v-model="cusInfo.name"-->
-                                  <!--required>-->
-                    <!--</b-form-input>-->
-                  <!--</b-col>-->
-                <!--</b-form-row>-->
-              <!--</div>-->
-              <!--<div class="col-sm-6">-->
-                <!--<b-form-row>-->
-                  <!--<b-col cols="2"><label class="col-form-label">来源:</label></b-col>-->
-                  <!--<b-col cols="10">-->
-                    <!--<b-form-input type="text"-->
-                                  <!--v-model="cusIntention.comeFrom"-->
-                                  <!--required>-->
-                    <!--</b-form-input>-->
-                  <!--</b-col>-->
-                <!--</b-form-row>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row">-->
-              <!--<div class="col-sm-6 mb-2">-->
-                <!--<b-form-row>-->
-                  <!--<b-col cols="2"><label class="col-form-label">微信:</label></b-col>-->
-                  <!--<b-col cols="10">-->
-                    <!--<b-form-input type="text"-->
-                                  <!--v-model="customer.wx"-->
-                                  <!--required>-->
-                    <!--</b-form-input>-->
-                  <!--</b-col>-->
-                <!--</b-form-row>-->
-              <!--</div>-->
-              <!--<div class="col-sm-6">-->
-                <!--<b-form-row>-->
-                  <!--<b-col cols="2"><label class="col-form-label">电话:</label></b-col>-->
-                  <!--<b-col cols="10">-->
-                    <!--<b-form-input type="tel"-->
-                                  <!--v-model="customer.tel"-->
-                                  <!--required>-->
-                    <!--</b-form-input>-->
-                  <!--</b-col>-->
-                <!--</b-form-row>-->
-              <!--</div>-->
-            <!--</div>-->
+            <div class="row">
+              <div class="col-sm-12">
+                <label>标签:</label>
+                <span>程序员</span>
+                <span>屌丝</span>
+              </div>
+            </div>
           </div>
         </div>
         <b-tabs>
@@ -95,7 +63,7 @@
                 <div class="row">
                   <div class="col-sm-7">
                     <b-form-group label="行程类型:" horizontal>
-                      <b-form-checkbox-group id="checkboxes1" name="type" v-model="customer.type">
+                      <b-form-checkbox-group v-model="customer.type">
                         <b-form-checkbox value="1">婚礼</b-form-checkbox>
                         <b-form-checkbox value="2">婚拍</b-form-checkbox>
                         <b-form-checkbox value="3">度蜜月</b-form-checkbox>
@@ -439,6 +407,64 @@
         </div>
       </div>
     </div>
+    <!--接入客户信息修改modal-->
+    <b-modal ref="newCusModal"
+             centered
+             title="客户基本信息">
+      <b-form>
+        <b-form-group label="姓名:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.name"
+                        required
+                        placeholder="请输入姓名">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="性别:"
+                      horizontal>
+          <b-form-radio-group v-model="customer.sex"
+                              :options="[{text:'男',value:1},{text:'女',value:0}]">
+          </b-form-radio-group>
+        </b-form-group>
+        <b-form-group label="电话:"
+                      horizontal>
+          <b-form-input type="tel"
+                        v-model="customer.tel"
+                        required
+                        placeholder="请输入电话">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="微信号:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.wxId"
+                        required
+                        placeholder="请输入微信号">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="微信昵称:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.wxNickname"
+                        required
+                        placeholder="请输入微信昵称">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group label="客户来源:"
+                      horizontal>
+          <b-form-input type="text"
+                        v-model="customer.comeFrom"
+                        required
+                        placeholder="请输入客户来源">
+          </b-form-input>
+        </b-form-group>
+      </b-form>
+      <div slot="modal-footer">
+        <b-btn type="button" variant="default" @click="closeNewCusModal">取消</b-btn>
+        <b-btn type="button" variant="primary" @click="saveNewCus">确定</b-btn>
+      </div>
+    </b-modal>
+    <!--报价单modal-->
     <b-modal ref="quoteModal"
              centered
              title="报价单">
@@ -453,6 +479,12 @@
                       :label-cols="2"
                       label="价格:">
           <b-form-input type="number"
+                        placeholder="请输入"></b-form-input>
+        </b-form-group>
+        <b-form-group horizontal
+                      :label-cols="2"
+                      label="报价人:">
+          <b-form-input type="text"
                         placeholder="请输入"></b-form-input>
         </b-form-group>
       </form>
@@ -551,6 +583,21 @@
       circle.setAttribute('stroke-dashoffset', (255 - rangeValue) + '%')
     },
     methods: {
+      openNewCusModal () {
+        this.$refs.newCusModal.show()
+      },
+      closeNewCusModal () {
+        this.$refs.newCusModal.hide()
+      },
+      saveNewCus (evt) {
+        evt.preventDefault()
+        // 深拷贝对象
+        // let obj = {...this.customer}
+        // obj.tripType = obj.tripType.join(',')
+        // addCustomer(obj, (data) => {
+        //   this.$router.push({path: '/app/customer', query: data.result})
+        // })
+      },
       openQuoteModal () {
         this.$refs.quoteModal.show()
       },
@@ -568,15 +615,13 @@
         // } else {
         //   this.handleSubmit()
         // }
-        alert('提交表单')
       },
       handleSubmit () {
         this.names.push(this.name)
         this.clearName()
         this.$refs.quoteModal.hide()
       },
-      sendMessage () {
-      }
+      sendMessage () {}
     }
   }
 </script>
