@@ -331,7 +331,7 @@
     border-top-color: $card-color-dark;
     .card-header {
       color: $card-color-dark;
-      padding: .5rem 1rem;
+      padding: .3rem .6rem;
     }
     .card-body {
       padding: 0;
@@ -341,7 +341,7 @@
     border-top-color: $card-color-warning;
     .card-header {
       color: $card-color-warning;
-      padding: .5rem 1rem;
+      padding: .3rem .6rem;
     }
     .card-body {
       padding: 0;
@@ -351,7 +351,7 @@
     border-top-color: $card-color-primary;
     .card-header {
       color: $card-color-primary;
-      padding: .5rem 1rem;
+      padding: .3rem .6rem;
     }
     .card-body {
       padding: 0;
@@ -361,7 +361,7 @@
     border-top-color: $card-color-danger;
     .card-header {
       color: $card-color-danger;
-      padding: .5rem 1rem;
+      padding: .3rem .6rem;
     }
     .card-body {
       padding: 0;
@@ -371,7 +371,7 @@
     border-top-color: $card-color-success;
     .card-header {
       color: $card-color-success;
-      padding: .5rem 1rem;
+      padding: .3rem .6rem;
     }
     .card-body {
       padding: 0;

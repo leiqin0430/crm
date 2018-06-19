@@ -6,7 +6,8 @@ const Header = () => import('@/views/header.vue')
 const Index = () => import('@/views/index.vue')
 const AddCustomer = () => import('@/views/addCustomer.vue')
 const Customer = () => import('@/views/customer.vue')
-const test = () => import('@/views/test.vue')
+// const test = () => import('@/views/test.vue')
+const test = () => import('@/components/test.vue')
 
 Vue.use(Router)
 

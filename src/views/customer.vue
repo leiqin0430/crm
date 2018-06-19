@@ -1,57 +1,44 @@
 <template>
   <div class="container v-container">
-    <div class="page-title">客户详情</div>
+    <div class="page-title"><span class="name">客户详情</span>
+      <b-badge pill variant="secondary">{{tripStatusText}}</b-badge>
+      <b-button variant="primary" @click="">保存</b-button>
+      <b-button variant="dark" @click="">标记失效</b-button>
+    </div>
     <div class="row">
       <div class="col-sm-7">
         <div class="row customer" @click="openNewCusModal">
           <div class="col-sm-2 progress-col">
-            <!--<div class="el-progress">-->
-              <!--<div style="width: 100%; height: 100%;">-->
-                <!--<svg viewBox="0 0 100 100">-->
-                  <!--<path d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" stroke="#e5e9f2" stroke-width="4.8" fill="none" class="el-progress-circle__track"></path>-->
-                  <!--<path d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" stroke-linecap="round" stroke="#20a0ff" stroke-width="4.8" fill="none" class="el-progress-circle__path" style="stroke-dasharray: 299.08px, 299.08px; stroke-dashoffset: 224.31px; transition: stroke-dashoffset 0.6s ease 0s, stroke 0.6s ease;"></path>-->
-                <!--</svg>-->
-              <!--</div>-->
-              <!--<div class="el-progress__text">25%</div>-->
-            <!--</div>-->
-            <div class="el-progress">
-            <div style="width: 100%; height: 100%;">
-            <svg id="circleProcess" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50%" cy="50%" r="40%" stroke-width="10%" stroke="#D1D3D7" fill="none" stroke-dashoffset="0%"></circle>
-              <circle id="circle" cx="50%" cy="50%" r="40%" stroke-width="10%"></circle>
-            </svg>
-            </div>
-            <div class="el-progress__text">25%</div>
-            </div>
+            <progress-ring :radius="40" :progress="progressValue" :stroke="4"></progress-ring>
           </div>
           <div class="col-sm-10">
             <div class="row">
               <div class="col-sm-6">
                 <label>姓名:</label>
-                <span>雷芹</span>
-                <i class="fas fa-venus" style="font-size: 1rem; color: #ea4335;"></i>
+                <span>{{cusInfo.name}}</span>
+                <i v-if="cusInfo.sex" class="fas fa-mars" style="font-size: 1rem; color: #4285f4;"></i>
+                <i v-else class="fas fa-venus" style="font-size: 1rem; color: #ea4335;"></i>
               </div>
               <div class="col-sm-6">
                 <label>来源:</label>
-                <span>马蜂窝</span>
+                <span>{{cusIntention.comeFrom}}</span>
               </div>
             </div>
             <div class="row">
               <div class="col-sm-6">
                 <label>微信:</label>
-                <span>芹芹（leiq）</span>
+                <span>{{cusInfo.wxNickname+'（'+cusInfo.wxId+'）'}}</span>
               </div>
               <div class="col-sm-6">
                 <label>电话:</label>
-                <span>18628372806</span>
+                <span>{{cusInfo.tel}}</span>
                 <span style="background-color: #34a853; color: #ffffff;">四川成都</span>
               </div>
             </div>
             <div class="row">
               <div class="col-sm-12">
                 <label>标签:</label>
-                <span>程序员</span>
-                <span>屌丝</span>
+                <tag v-for="tag in cusInfo.tags" :key="tag" @close="handleTagClose(tag)">{{tag}}</tag>
               </div>
             </div>
           </div>
@@ -63,19 +50,14 @@
                 <div class="row">
                   <div class="col-sm-7">
                     <b-form-group label="行程类型:" horizontal>
-                      <b-form-checkbox-group v-model="customer.type">
-                        <b-form-checkbox value="1">婚礼</b-form-checkbox>
-                        <b-form-checkbox value="2">婚拍</b-form-checkbox>
-                        <b-form-checkbox value="3">度蜜月</b-form-checkbox>
-                        <b-form-checkbox value="4">亲子</b-form-checkbox>
-                        <b-form-checkbox value="5">旅行</b-form-checkbox>
+                      <b-form-checkbox-group v-model="cusIntention.tripTypeArr" :options="[{text:'婚礼',value:1},{text:'婚拍',value:2},{text:'度蜜月',value:3},{text:'亲子',value:4},{text:'旅行',value:5}]">
                       </b-form-checkbox-group>
                     </b-form-group>
                   </div>
                   <div class="col-sm-5">
                     <b-form-group label="婚期:" horizontal>
                       <b-form-input type="date"
-                                    v-model="customer.weddingDay"
+                                    v-model="cusInfo.weddingDate"
                                     required>
                       </b-form-input>
                     </b-form-group>
@@ -84,7 +66,10 @@
                 <div class="row">
                   <div class="col-sm-7">
                     <b-form-group label="意向目的地:" horizontal>
-                      <b-form-input></b-form-input>
+                      <b-form-input type="text"
+                                    v-model="cusIntention.destination"
+                                    required>
+                      </b-form-input>
                     </b-form-group>
                   </div>
                 </div>
@@ -92,14 +77,14 @@
                   <div class="col-sm-6">
                     <b-form-group label="出发地:" horizontal>
                       <b-form-input type="text"
-                                    v-model="customer.setOutPlace"
+                                    v-model="cusIntention.base"
                                     required>
                       </b-form-input>
                     </b-form-group>
                   </div>
                   <div class="col-sm-6">
                     <b-form-group label="酒店类型:" horizontal>
-                      <b-form-select v-model="customer.hotelType">
+                      <b-form-select v-model="cusIntention.hotelType">
                         <option :value="null">-请选择-</option>
                         <option value="a">奢华五星</option>
                         <option value="b">豪华四星</option>
@@ -115,14 +100,14 @@
                   <b-form-row>
                     <b-col cols="4">
                       <b-form-input type="number"
-                                    v-model="customer.travelNumber.adult"
+                                    v-model="cusIntention.adults"
                                     required>
                       </b-form-input>
                     </b-col>
                     <b-col cols="2"><label class="col-form-label">成人</label></b-col>
                     <b-col cols="4">
                       <b-form-input type="number"
-                                    v-model="customer.travelNumber.children"
+                                    v-model="cusIntention.child"
                                     required>
                       </b-form-input>
                     </b-col>
@@ -135,14 +120,14 @@
                   <b-form-row>
                     <b-col cols="5">
                       <b-form-input type="date"
-                                    v-model="customer.travelTime.start"
+                                    v-model="cusIntention.tripBeginTime"
                                     required>
                       </b-form-input>
                     </b-col>
                     <b-col cols="1" class="text-center"><label class="col-form-label">至</label></b-col>
                     <b-col cols="5">
                       <b-form-input type="date"
-                                    v-model="customer.travelTime.end"
+                                    v-model="cusIntention.tripEndTime"
                                     required>
                       </b-form-input>
                     </b-col>
@@ -154,14 +139,14 @@
                   <b-form-row>
                     <b-col cols="5">
                       <b-form-input type="number"
-                                    v-model="customer.travelDays.day"
+                                    v-model="cusIntention.tripDays"
                                     required>
                       </b-form-input>
                     </b-col>
                     <b-col cols="1"><label class="col-form-label">天</label></b-col>
                     <b-col cols="5">
                       <b-form-input type="number"
-                                    v-model="customer.travelDays.night"
+                                    v-model="cusIntention.tripNights"
                                     required>
                       </b-form-input>
                     </b-col>
@@ -174,7 +159,7 @@
                   <b-form-row>
                     <b-col>
                       <b-form-input type="text"
-                                    v-model="customer.budget"
+                                    v-model="cusIntention.budget"
                                     required>
                       </b-form-input>
                     </b-col>
@@ -185,7 +170,7 @@
                               label="备注:">
                   <b-form-row>
                     <b-col>
-                      <b-form-textarea v-model="customer.desc"
+                      <b-form-textarea v-model="cusIntention.point"
                                        placeholder="请输入需要注意的事项（非必填）"
                                        :rows="3"
                                        :max-rows="6">
@@ -500,8 +485,14 @@
   </div>
 </template>
 <script>
+  import progress from '@/components/progress.vue'
+  import tag from '@/components/tag.vue'
   import {getCusDetail} from '@/api/index'
   export default {
+    components: {
+      'progress-ring': progress,
+      'tag': tag
+    },
     data () {
       let fields1 = [
         {key: 'name', label: '姓名'},
@@ -560,7 +551,10 @@
           budget: '',
           desc: '',
           email: ''
-        }
+        },
+        tripStatusText: '',
+        progressValue: 0,
+        tags: ['标签一', '标签二', '标签三', '标签四']
       }
     },
     mounted () {
@@ -573,16 +567,46 @@
           this.resultData = data.result
           this.cusInfo = {...this.resultData.cusInfo}
           this.cusIntention = {...this.resultData.cusIntention}
+          this.cusIntention.tripTypeArr = this.cusIntention.tripType.split(',')
+          this.progressValue = this.cusIntention.autoRate + this.cusIntention.rate
+          switch (this.cusIntention.status) {
+            case 1:
+              this.tripStatusText = '初步接洽'
+              break
+            case 2:
+              this.tripStatusText = '待明确需求'
+              break
+            case 3:
+              this.tripStatusText = '待报价'
+              break
+            case 4:
+              this.tripStatusText = '待付款'
+              break
+            case 5:
+              this.tripStatusText = '付款中'
+              break
+            case 6:
+              this.tripStatusText = '待出行'
+              break
+            case 7:
+              this.tripStatusText = '出行中'
+              break
+            case 8:
+              this.tripStatusText = '待回访'
+              break
+            case 9:
+              this.tripStatusText = '完成'
+              break
+            default:
+              break
+          }
         }
       })
-//      let circleProcess = document.getElementById('circleProcess')
-      let circle = document.getElementById('circle')
-//      let range = document.getElementById('range')
-      // 滑动条的值
-      let rangeValue = 63
-      circle.setAttribute('stroke-dashoffset', (255 - rangeValue) + '%')
     },
     methods: {
+      handleTagClose (tag) {
+        this.tags.splice(this.tags.indexOf(tag), 1)
+      },
       openNewCusModal () {
         this.$refs.newCusModal.show()
       },
@@ -629,63 +653,22 @@
   @import "../scss/custom.scss";
   .v-container {
     .page-title {
-      font-size: 1.4rem;
-      font-weight: bold;
       margin: .6rem 0;
+      .name {
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
     }
     .customer {
       background-color: #ffffff;
       padding: 1rem 0;
       margin: 0 0 1rem 0;
       border: 1px solid #dee2e6;
-    .progress-col {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      #circleProcess {
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 6rem;
-        height: 6rem;
-        stroke-dasharray: 255%;
-        stroke-dashoffset: 255%;
-        stroke: #409eff;
-        fill: none;
-        -webkit-transform: rotate(-90deg);
-        -moz-transform: rotate(-90deg);
-        -ms-transform: rotate(-90deg);
-        -o-transform: rotate(-90deg);
-        transform: rotate(-90deg);
+      .progress-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      .el-progress {
-        width: 6rem;
-        height: 6rem;
-        /*background-color: #34a853;*/
-        /*border-radius: 50%;*/
-        /*color: #ffffff;*/
-        /*text-align: center;*/
-        /*line-height: 4rem;*/
-        position: relative;
-        line-height: 1;
-        display: inline-block;
-      .el-progress__text {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        margin: 0;
-        transform: translateY(-50%);
-        font-size: 1.4rem;
-        color: #606266;
-        display: inline-block;
-        vertical-align: middle;
-        line-height: 1;
-      }
-      }
-    }
     }
     .cus-container {
       background-color: #ffffff;
