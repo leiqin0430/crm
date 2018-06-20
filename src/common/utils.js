@@ -80,11 +80,12 @@ export const urlParse = () => {
 }
 
 /**
- * 时间戳日期格式化(yy-mm-dd hh:mi:ss)
+ * 时间戳日期格式化
+ * @param flag
  * @param timestamp
  * @returns {string}
  */
-export const dateFormatYymmddhhmiss = (timestamp) => {
+export const timestampFormat = (flag, timestamp) => {
   if (!timestamp) {
     return ''
   }
@@ -101,7 +102,15 @@ export const dateFormatYymmddhhmiss = (timestamp) => {
   h = (h < 10) ? ('0' + h) : h
   mi = (mi < 10) ? ('0' + mi) : mi
   s = (s < 10) ? ('0' + s) : s
-  return y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':' + s
+  switch (flag) {
+    case 'ss':
+      return y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':' + s
+    case 'mi':
+      return y + '-' + m + '-' + d + ' ' + h + ':' + mi
+    case 'dd':
+    default:
+      return y + '-' + m + '-' + d
+  }
 }
 
 // 关于textare输入回车和空格的数据库存储和读取问题

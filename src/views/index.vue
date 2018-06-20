@@ -8,78 +8,123 @@
           </div>
           <div class="col-sm-6">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="请输入手机号码/姓名/微信昵称" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <input type="text" v-model="searchText" class="form-control" placeholder="请输入手机号码/姓名/微信昵称">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i><span>搜索</span></button>
+                <button class="btn btn-outline-secondary" type="button" @click="searchList"><i class="fas fa-search"></i><span>搜索</span></button>
               </div>
             </div>
           </div>
         </div>
-        <div class="card card-border-color card-border-color-dark">
+        <div v-if="isInit" class="card card-border-color card-border-color-dark">
           <h5 class="card-header">初步接洽</h5>
           <div class="card-body">
-            <b-table responsive striped small hover
+            <b-table responsive small hover
                      class="text-nowrap"
-                     :items="tableData1.rows"
                      :fields="fields1"
-                     :current-page="currentPage"
-                     :per-page="perPage"
+                     :items="tableData1.result"
                      @row-clicked="rowClicked">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
               </template>
+              <template slot="wx" slot-scope="data">
+                {{data.item.wxNickname + '(' + data.item.wxId + ')'}}
+              </template>
             </b-table>
-            <div class="row">
-              <div class="col-sm-2">
-                <b-form-select :options="pageOptions" v-model="perPage" />
-              </div>
-              <div class="col-sm-6">
-                <b-pagination :total-rows="tableData1.total" :per-page="perPage" v-model="currentPage" class="my-0" />
-              </div>
-            </div>
+            <!--<div class="row">-->
+              <!--<div class="col-sm-2">-->
+                <!--<b-form-select :options="pageOptions" v-model="perPage" />-->
+              <!--</div>-->
+              <!--:current-page="currentPage"-->
+              <!--:per-page="perPage"-->
+              <!--<div class="col-sm-6">-->
+                <!--<b-pagination :total-rows="tableData1.total" :per-page="perPage" v-model="currentPage" class="my-0" />-->
+              <!--</div>-->
+            <!--</div>-->
           </div>
         </div>
-        <div class="card card-border-color card-border-color-warning">
-          <h5 class="card-header">长期跟进</h5>
+        <div v-if="isInit" class="card card-border-color card-border-color-warning">
+          <h5 class="card-header">待明确需求</h5>
           <div class="card-body">
-            <b-table responsive striped small hover class="text-nowrap" :items="tableData1.rows" :fields="fields1">
+            <b-table responsive small hover
+                     class="text-nowrap"
+                     :fields="fields1"
+                     :items="tableData2.result">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
               </template>
-            </b-table>
-          </div>
-        </div>
-        <div class="card card-border-color card-border-color-primary">
-          <h5 class="card-header">明确需求</h5>
-          <div class="card-body">
-            <b-table responsive striped small hover class="text-nowrap" :items="tableData2.rows" :fields="fields2">
-              <!-- A virtual column -->
-              <template slot="index" slot-scope="data">
-                {{data.index + 1}}
+              <template slot="wx" slot-scope="data">
+                {{data.item.wxNickname + '(' + data.item.wxId + ')'}}
               </template>
             </b-table>
           </div>
         </div>
-        <div class="card card-border-color card-border-color-danger">
-          <h5 class="card-header">方案报价</h5>
+        <div v-if="isInit" class="card card-border-color card-border-color-primary">
+          <h5 class="card-header">已报价</h5>
           <div class="card-body">
-            <b-table responsive striped small hover class="text-nowrap" :items="tableData2.rows" :fields="fields2">
+            <b-table responsive small hover
+                     class="text-nowrap"
+                     :fields="fields3"
+                     :items="tableData3.result">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
               </template>
+              <template slot="wx" slot-scope="data">
+                {{data.item.wxNickname + '(' + data.item.wxId + ')'}}
+              </template>
             </b-table>
           </div>
         </div>
-        <div class="card card-border-color card-border-color-success">
+        <div v-if="isInit" class="card card-border-color card-border-color-danger">
           <h5 class="card-header">已成交</h5>
           <div class="card-body">
-            <b-table responsive striped small hover class="text-nowrap" :items="tableData3.rows" :fields="fields3">
+            <b-table responsive small hover
+                     class="text-nowrap"
+                     :fields="fields4"
+                     :items="tableData4.result">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
+              </template>
+              <template slot="wx" slot-scope="data">
+                {{data.item.wxNickname + '(' + data.item.wxId + ')'}}
+              </template>
+            </b-table>
+          </div>
+        </div>
+        <div v-if="isInit" class="card card-border-color card-border-color-success">
+          <h5 class="card-header">已出行</h5>
+          <div class="card-body">
+            <b-table responsive small hover
+                     class="text-nowrap"
+                     :fields="fields5"
+                     :items="tableData5.result">
+              <!-- A virtual column -->
+              <template slot="index" slot-scope="data">
+                {{data.index + 1}}
+              </template>
+              <template slot="wx" slot-scope="data">
+                {{data.item.wxNickname + '(' + data.item.wxId + ')'}}
+              </template>
+            </b-table>
+          </div>
+        </div>
+        <div v-if="!isInit" class="card card-border-color card-border-color-dark">
+          <h5 class="card-header">搜索结果<b-button variant="link" @click="isInit = true">返回</b-button></h5>
+          <div class="card-body">
+            <b-table responsive small hover
+                     class="text-nowrap"
+                     :fields="fields6"
+                     :items="tableData6.result"
+                     @row-clicked="rowClicked">
+              <!-- A virtual column -->
+              <template slot="index" slot-scope="data">
+                {{data.index + 1}}
+              </template>
+              <template slot="wx" slot-scope="data">
+                {{data.item.wxNickname + '(' + data.item.wxId + ')'}}
               </template>
             </b-table>
           </div>
@@ -205,48 +250,175 @@
   </div>
 </template>
 <script>
-  import {addCustomer} from '@/api/index'
+  import {addCustomer, getCusList, getCusQuery} from '@/api/index'
+  import {timestampFormat} from '@/common/utils'
   export default {
     data () {
       let fields1 = [
         {key: 'index', label: '序号'},
-        {key: 'from', label: '来源'},
+        {key: 'comeFrom', label: '来源'},
         {key: 'name', label: '姓名'},
-        {key: 'gender', label: '性别'},
+        {
+          key: 'sex',
+          label: '性别',
+          formatter: (value, key, item) => {
+            return value === 1 ? '男' : '女'
+          }
+        },
         {key: 'tel', label: '电话'},
         {key: 'wx', label: '微信'}
       ]
-      let fields2 = [
-        {key: 'index', label: '序号'},
-        {key: 'from', label: '来源'},
-        {key: 'name', label: '姓名'},
-        {key: 'gender', label: '性别'},
-        {key: 'tel', label: '电话'},
-        {key: 'wx', label: '微信'},
-        {key: 'idest', label: '意向目的地'},
-        {key: 'travelTime', label: '出行时间'},
-        {key: 'travelNumber', label: '出行人数'},
-        {key: 'budget', label: '预算'},
-        {key: 'setOutPlace', label: '出发地'},
-        {key: 'quote', label: '报价'},
-        {key: 'desc', label: '特别说明'}
-      ]
       let fields3 = [
         {key: 'index', label: '序号'},
-        {key: 'from', label: '来源'},
+        {key: 'comeFrom', label: '来源'},
         {key: 'name', label: '姓名'},
-        {key: 'gender', label: '性别'},
+        {
+          key: 'sex',
+          label: '性别',
+          formatter: (value, key, item) => {
+            return value === 1 ? '男' : '女'
+          }
+        },
         {key: 'tel', label: '电话'},
         {key: 'wx', label: '微信'},
-        {key: 'dest', label: '目的地'},
-        {key: 'travelTime', label: '出行时间'},
-        {key: 'travelNumber', label: '出行人数'},
-        {key: 'setOutPlace', label: '出发地'},
-        {key: 'dealPrice', label: '成交价格'},
-        {key: 'dealTime', label: '成交时间'},
-        {key: 'desc', label: '特别说明'}
+        {key: 'intentionDestination', label: '意向目的地'},
+        {
+          key: 'tripTime',
+          label: '预计出行时间',
+          formatter: (value, key, item) => {
+            return timestampFormat(item.tripBeginTime) + '-' + timestampFormat(item.tripEndTime)
+          }
+        },
+        {
+          key: 'tripNumber',
+          label: '预计出行人数',
+          formatter: (value, key, item) => {
+            return '成人: ' + item.intentionAdults + ' 儿童: ' + item.intentionChild
+          }
+        },
+        {key: 'intentionBudget', label: '预算'},
+        {key: 'lastPrice', label: '最后报价'},
+        {key: 'intentionBase', label: '出发地'},
+        {key: 'intentionPoint', label: '特别说明'}
+      ]
+      let fields4 = [
+        {key: 'index', label: '序号'},
+        {key: 'comeFrom', label: '来源'},
+        {key: 'name', label: '姓名'},
+        {
+          key: 'sex',
+          label: '性别',
+          formatter: (value, key, item) => {
+            return value === 1 ? '男' : '女'
+          }
+        },
+        {key: 'tel', label: '电话'},
+        {key: 'wx', label: '微信'},
+        {key: 'orderBase', label: '出发地'},
+        {key: 'orderDestination', label: '目的地'},
+        {
+          key: 'tripTime',
+          label: '出行时间',
+          formatter: (value, key, item) => {
+            return timestampFormat(item.beginTime) + '-' + timestampFormat(item.endTime)
+          }
+        },
+        {
+          key: 'tripNumber',
+          label: '出行人数',
+          formatter: (value, key, item) => {
+            return '成人: ' + item.orderAdults + ' 儿童: ' + item.orderChild
+          }
+        },
+        {key: 'totalPrice', label: '总价'},
+        {key: 'payPrice', label: '已付款'},
+        {key: 'intentionPoint', label: '特别说明'}
+      ]
+      let fields5 = [
+        {key: 'index', label: '序号'},
+        {key: 'comeFrom', label: '来源'},
+        {key: 'name', label: '姓名'},
+        {
+          key: 'sex',
+          label: '性别',
+          formatter: (value, key, item) => {
+            return value === 1 ? '男' : '女'
+          }
+        },
+        {key: 'tel', label: '电话'},
+        {key: 'wx', label: '微信'},
+        {key: 'orderBase', label: '出发地'},
+        {key: 'orderDestination', label: '目的地'},
+        {
+          key: 'tripTime',
+          label: '出行时间',
+          formatter: (value, key, item) => {
+            return timestampFormat(item.beginTime) + '-' + timestampFormat(item.endTime)
+          }
+        },
+        {
+          key: 'tripNumber',
+          label: '出行人数',
+          formatter: (value, key, item) => {
+            return '成人: ' + item.orderAdults + ' 儿童: ' + item.orderChild
+          }
+        },
+        {key: 'totalPrice', label: '成交价格'},
+        {
+          key: 'acceptTime',
+          label: '成交时间',
+          formatter: (value, key, item) => {
+            return timestampFormat('mi', value)
+          }
+        },
+        {key: 'intentionPoint', label: '特别说明'}
+      ]
+      let fields6 = [
+        {key: 'index', label: '序号'},
+        {key: 'comeFrom', label: '来源'},
+        {key: 'name', label: '姓名'},
+        {
+          key: 'sex',
+          label: '性别',
+          formatter: (value, key, item) => {
+            return value === 1 ? '男' : '女'
+          }
+        },
+        {key: 'tel', label: '电话'},
+        {key: 'wx', label: '微信'},
+        {
+          key: 'status',
+          label: '状态',
+          formatter: (value, key, item) => {
+            switch (value) {
+              case 1:
+                return '初步接洽'
+              case 2:
+                return '待明确需求'
+              case 3:
+                return '已报价'
+              case 4:
+                return '待付款'
+              case 5:
+                return '付款中'
+              case 6:
+                return '待出行'
+              case 7:
+                return '出行中'
+              case 8:
+                return '待回访'
+              case 9:
+                return '完成'
+              default:
+                return ''
+            }
+          }
+        },
+        {key: 'followBy', label: '跟进负责人'}
       ]
       return {
+        isInit: true,
+        searchText: '',
         customer: {
           name: '',
           sex: 1,
@@ -257,43 +429,45 @@
           tripType: []
         },
         fields1: fields1,
-        fields2: fields2,
         fields3: fields3,
-        tableData1: {total: 5,
-          rows: [
-            {id: 1, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫'},
-            {id: 2, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫'},
-            {id: 3, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫'},
-            {id: 4, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫'},
-            {id: 5, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫'}
-          ]},
-        tableData2: {total: 5,
-          rows: [
-            {id: 1, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', idest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', quote: '￥40000'},
-            {id: 2, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', idest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', quote: '￥40000'},
-            {id: 3, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', idest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', quote: '￥40000'},
-            {id: 4, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', idest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', quote: '￥40000'},
-            {id: 5, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', idest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', quote: '￥40000'}
-          ]},
-        tableData3: {total: 5,
-          rows: [
-            {id: 1, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'},
-            {id: 2, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'},
-            {id: 3, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'},
-            {id: 4, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'},
-            {id: 5, from: 'app', name: '雷芹', gender: '女', tel: 18700571926, wx: '放开那只猫', dest: '巴厘岛', travelTime: '2018-10-01 09:00', travelNumber: 2, budget: '￥30000', setOutPlace: '北京', desc: '备注', dealTime: '2018-08-01 09:00', dealPrice: '￥38000'}
-          ]},
+        fields4: fields4,
+        fields5: fields5,
+        fields6: fields6,
+        tableData1: [],
+        tableData2: [],
+        tableData3: [],
+        tableData4: [],
+        tableData5: [],
+        tableData6: [],
         currentPage: 1,
         perPage: 2,
         pageOptions: [ 2, 5, 10, 15 ]
       }
+    },
+    mounted () {
+      getCusList({pageNum: 1, pageSize: 10, param: '1'}, (data) => {
+        console.log(data)
+        this.tableData1 = data.page
+      })
+      getCusList({pageNum: 1, pageSize: 10, param: '2'}, (data) => {
+        this.tableData2 = data.page
+      })
+      getCusList({pageNum: 1, pageSize: 10, param: '3'}, (data) => {
+        this.tableData3 = data.page
+      })
+      getCusList({pageNum: 1, pageSize: 10, param: '4,5,6'}, (data) => {
+        this.tableData4 = data.page
+      })
+      getCusList({pageNum: 1, pageSize: 10, param: '7,8'}, (data) => {
+        this.tableData5 = data.page
+      })
     },
     methods: {
       // addCustomer () {
       //   this.$router.push({path: '/app/addCustomer'})
       // },
       rowClicked (item, index, event) {
-        this.$router.push({path: '/app/customer'})
+        this.$router.push({path: '/app/customer', query: {cusInfoId: item.id, cusIntentionId: item.cusIntentionId}})
       },
       openNewCusModal () {
         this.$refs.newCusModal.show()
@@ -307,7 +481,13 @@
         let obj = {...this.customer}
         obj.tripType = obj.tripType.join(',')
         addCustomer(obj, (data) => {
-          this.$router.push({path: '/app/customer', query: data.result})
+          // this.$router.push({path: '/app/customer', query: data.result})
+        })
+      },
+      searchList () {
+        getCusQuery({pageNum: 1, pageSize: 10, param: this.searchText}, (data) => {
+          this.isInit = false
+          this.tableData6 = data.page
         })
       }
     }

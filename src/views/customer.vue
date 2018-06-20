@@ -27,7 +27,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <label>微信:</label>
-                <span>{{cusInfo.wxNickname+'（'+cusInfo.wxId+'）'}}</span>
+                <span>{{cusInfo.wxNickname+'('+cusInfo.wxId+')'}}</span>
               </div>
               <div class="col-sm-6">
                 <label>电话:</label>
@@ -86,10 +86,10 @@
                     <b-form-group label="酒店类型:" horizontal>
                       <b-form-select v-model="cusIntention.hotelType">
                         <option :value="null">-请选择-</option>
-                        <option value="a">奢华五星</option>
-                        <option value="b">豪华四星</option>
-                        <option value="c">舒适三星及以下</option>
-                        <option value="d">民宿及特色酒店</option>
+                        <option value="奢华五星">奢华五星</option>
+                        <option value="豪华四星">豪华四星</option>
+                        <option value="舒适三星及以下">舒适三星及以下</option>
+                        <option value="民宿及特色酒店">民宿及特色酒店</option>
                       </b-form-select>
                     </b-form-group>
                   </div>
@@ -382,10 +382,11 @@
           <div class="message-btn">
             <b-form-textarea placeholder="请输入行程关键节点以便做好记录"
                              :rows="3"
-                             :max-rows="6">
+                             :max-rows="6"
+                             v-model="followContent">
             </b-form-textarea>
             <div class="track-btn">
-              <b-button type="button" variant="primary" @click="sendMessage">保存</b-button>
+              <b-button type="button" variant="primary" @click="cusFollow">保存</b-button>
               <b-button type="button" variant="secondary" @click="sendMessage">提醒</b-button>
             </div>
           </div>
@@ -458,26 +459,28 @@
                       :label-cols="2"
                       label="产品名:">
           <b-form-input type="text"
+                        v-model="priceObj.description"
                         placeholder="请输入"></b-form-input>
         </b-form-group>
         <b-form-group horizontal
                       :label-cols="2"
                       label="价格:">
           <b-form-input type="number"
+                        v-model="priceObj.price"
                         placeholder="请输入"></b-form-input>
         </b-form-group>
         <b-form-group horizontal
                       :label-cols="2"
                       label="报价人:">
-          <b-form-input type="text"
-                        placeholder="请输入"></b-form-input>
+          <b-form-select v-model="priceObj.priceFrom"
+                         :options="cusUsers"></b-form-select>
         </b-form-group>
       </form>
       <div slot="modal-footer">
         <b-btn variant="secondary" @click="closeQuoteModal">
           取消
         </b-btn>
-        <b-btn variant="primary" @click="handleOk">
+        <b-btn variant="primary" @click="handlePriceOk">
           确定
         </b-btn>
       </div>
@@ -487,7 +490,7 @@
 <script>
   import progress from '@/components/progress.vue'
   import tag from '@/components/tag.vue'
-  import {getCusDetail} from '@/api/index'
+  import {getCusDetail, getCusUsers, cusPrice, cusFollow} from '@/api/index'
   export default {
     components: {
       'progress-ring': progress,
@@ -554,13 +557,15 @@
         },
         tripStatusText: '',
         progressValue: 0,
-        tags: ['标签一', '标签二', '标签三', '标签四']
+        tags: ['标签一', '标签二', '标签三', '标签四'],
+        cusUsers: [],
+        priceObj: {},
+        followContent: ''
       }
     },
     mounted () {
       // {cusInfoId: 6, cusIntentionId: 4}
-      // let paramObj = this.$route.query
-      let paramObj = {cusInfoId: 6, cusIntentionId: 4}
+      let paramObj = this.$route.query
       getCusDetail(paramObj, (data) => {
         console.log(data)
         if (data.result) {
@@ -623,6 +628,12 @@
         // })
       },
       openQuoteModal () {
+        getCusUsers({roleId: 3}, (data) => {
+          // console.log(data)
+          data.result.forEach((item) => {
+            this.cusUsers.push({value: item.id, text: item.nickname})
+          })
+        })
         this.$refs.quoteModal.show()
       },
       closeQuoteModal () {
@@ -631,7 +642,7 @@
       clearName () {
         // this.name = ''
       },
-      handleOk (evt) {
+      handlePriceOk (evt) {
         // Prevent modal from closing
         evt.preventDefault()
         // if (!this.name) {
@@ -639,11 +650,16 @@
         // } else {
         //   this.handleSubmit()
         // }
+        this.priceObj.cusIntentionId = this.cusIntention.id
+        cusPrice(this.priceObj)
       },
       handleSubmit () {
         this.names.push(this.name)
         this.clearName()
         this.$refs.quoteModal.hide()
+      },
+      cusFollow () {
+        cusFollow({cusIntentionId: this.cusIntention.id, content: this.followContent})
       },
       sendMessage () {}
     }
