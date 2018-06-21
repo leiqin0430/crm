@@ -2,7 +2,6 @@
   <div class="container v-container">
     <div class="page-title"><span class="name">客户详情</span>
       <b-badge pill variant="secondary">{{tripStatusText}}</b-badge>
-      <b-button variant="primary" @click="">保存</b-button>
       <b-button variant="dark" @click="">标记失效</b-button>
     </div>
     <div class="row">
@@ -183,13 +182,27 @@
                               label="报价记录:">
                   <b-form-row>
                     <b-col>
-                      <div>热辣普吉 蜜月之旅 7天5晚普吉岛动感体验之旅<span>￥21000</span>
-                        <b-button type="button" variant="link">成交</b-button></div>
-                      <div>浪漫蜜月 最美普吉岛7天5晚双岛双酒店奢华蜜月之旅<span>￥23000</span>
-                        <b-button type="button" variant="link">成交</b-button></div>
+                      <div v-for="(item, index) in cusIntentionPrices">
+                        <span>{{item.description}}</span>
+                        <span>{{'￥'+item.price}}</span>
+                        <span>{{item.priceFrom | getcusNickname(cusUsers)}}</span>
+                        <b-button v-if="!(cusIntention.status===4)" type="button" variant="link" @click="acceptPrice(item.id)">成交</b-button>
+                        <span>{{item.accept===1?'已采纳':''}}</span>
+                      </div>
+                      <!--<div><span>{{item.description}}</span><span>{{'￥'+item.price}}</span>-->
+                        <!--<b-button type="button" variant="link" @click="acceptPrice(item.id)">成交</b-button></div>-->
+                      <!--<div>浪漫蜜月 最美普吉岛7天5晚双岛双酒店奢华蜜月之旅<span>￥23000</span>-->
+                        <!--<b-button type="button" variant="link">成交</b-button></div>-->
                       <div>
                         <b-button type="button" variant="primary" @click="openQuoteModal">报价</b-button>
                       </div>
+                    </b-col>
+                  </b-form-row>
+                </b-form-group>
+                <b-form-group>
+                  <b-form-row>
+                    <b-col style="text-align: center;">
+                      <b-button variant="primary" @click="saveCusInfo">保存</b-button>
                     </b-col>
                   </b-form-row>
                 </b-form-group>
@@ -337,6 +350,13 @@
                     </b-form-group>
                   </div>
                 </div>
+                <b-form-group>
+                  <b-form-row>
+                    <b-col style="text-align: center;">
+                      <b-button variant="primary" @click="saveCusInfo">保存</b-button>
+                    </b-col>
+                  </b-form-row>
+                </b-form-group>
               </b-form>
             </div>
           </b-tab>
@@ -347,15 +367,15 @@
           <div class="group-title text-primary">短信记录</div>
           <div class="message-list">
             <div class="message-item">
-              <div><i class="far fa-clock timeIcon text-success"></i>2018-05-12 15:22 已发送</div>
+              <div class="message-time"><i class="far fa-clock timeIcon text-success"></i>2018-05-12 15:22 已发送</div>
               <div class="message-content">【蜜游网】尊敬的雷小姐，已收到你的普吉岛婚礼订单付款200元</div>
             </div>
             <div class="message-item">
-              <div><i class="far fa-clock timeIcon text-warning"></i>2018-05-12 15:22 定时发送</div>
+              <div class="message-time"><i class="far fa-clock timeIcon text-warning"></i>2018-05-12 15:22 定时发送</div>
               <div class="message-content">【蜜游网】尊敬的雷小姐，已收到你的普吉岛婚礼订单付款200元</div>
             </div>
             <div class="message-item">
-              <div><i class="far fa-clock timeIcon text-success"></i>2018-05-12 15:22 已发送</div>
+              <div class="message-time"><i class="far fa-clock timeIcon text-success"></i>2018-05-12 15:22 已发送</div>
               <div class="message-content">【蜜游网】尊敬的雷小姐，已收到你的普吉岛婚礼订单付款200元</div>
             </div>
           </div>
@@ -366,17 +386,13 @@
         <div class="left-record">
           <div class="group-title text-primary">跟进记录</div>
           <div class="message-list">
-            <div class="message-item">
-              <div><i class="far fa-clock timeIcon text-success"></i>2018-05-12 15:22 初步接洽</div>
-              <!--<div class="message-content">【蜜游网】尊敬的雷小姐，已收到你的普吉岛婚礼订单付款200元</div>-->
-            </div>
-            <div class="message-item">
-              <div><i class="far fa-clock timeIcon text-success"></i>2018-05-12 15:22 已发送</div>
-              <div class="message-content">【蜜游网】尊敬的雷小姐，已收到你的普吉岛婚礼订单付款200元</div>
-            </div>
-            <div class="message-item">
-              <div><i class="far fa-clock timeIcon text-success"></i>2018-05-12 15:22 已发送</div>
-              <div class="message-content">【蜜游网】尊敬的雷小姐，已收到你的普吉岛婚礼订单付款200元</div>
+            <div class="message-item" v-for="(item, index) in cusIntentionFollows">
+              <div class="message-time">
+                <i class="far fa-clock timeIcon text-success"></i>
+                <span>{{dateFormatter(item.createTime)}}</span>
+                <span>{{item.followBy | getcusNickname(cusUsers)}}</span>
+              </div>
+              <div class="message-content">{{item.content}}</div>
             </div>
           </div>
           <div class="message-btn">
@@ -490,7 +506,8 @@
 <script>
   import progress from '@/components/progress.vue'
   import tag from '@/components/tag.vue'
-  import {getCusDetail, getCusUsers, cusPrice, cusFollow} from '@/api/index'
+  import {getCusDetail, getCusUsers, cusPrice, cusFollow, cusSave} from '@/api/index'
+  import {timestampFormat} from '@/common/utils'
   export default {
     components: {
       'progress-ring': progress,
@@ -521,8 +538,10 @@
       ]
       return {
         resultData: null,
-        cusInfo: null,
-        cusIntention: null,
+        cusInfo: {},
+        cusIntention: {},
+        cusIntentionFollows: [],
+        cusIntentionPrices: [],
         fields1: fields1,
         fields2: fields2,
         fields3: fields3,
@@ -566,13 +585,30 @@
     mounted () {
       // {cusInfoId: 6, cusIntentionId: 4}
       let paramObj = this.$route.query
+      // 产品
+      getCusUsers({roleId: 3}, (data) => {
+        // console.log(data)
+        data.result.forEach((item) => {
+          this.cusUsers.push({value: item.id, text: item.nickname})
+        })
+      })
       getCusDetail(paramObj, (data) => {
         console.log(data)
         if (data.result) {
           this.resultData = data.result
           this.cusInfo = {...this.resultData.cusInfo}
+          // 婚期
+          this.cusInfo.weddingDate = timestampFormat(this.cusInfo.weddingDate)
           this.cusIntention = {...this.resultData.cusIntention}
+          // 行程类型
           this.cusIntention.tripTypeArr = this.cusIntention.tripType.split(',')
+          // 意向出行时间
+          this.cusIntention.tripBeginTime = timestampFormat(this.cusIntention.tripBeginTime)
+          this.cusIntention.tripEndTime = timestampFormat(this.cusIntention.tripEndTime)
+          // 跟进记录
+          this.cusIntentionFollows = {...this.resultData.cusIntentionFollows}
+          // 报价列表
+          this.cusIntentionPrices = {...this.resultData.cusIntentionPrices}
           this.progressValue = this.cusIntention.autoRate + this.cusIntention.rate
           switch (this.cusIntention.status) {
             case 1:
@@ -608,7 +644,25 @@
         }
       })
     },
+    filters: {
+      getcusNickname: (value, cusUsers) => {
+        if (!value) return ''
+        for (let i = 0; i < cusUsers.length; i++) {
+          if (cusUsers[i].value === value) {
+            return cusUsers[i].text
+          }
+        }
+        // cusUsers.forEach((item) => {
+        //   if (item.value === value) {
+        //     return item.text
+        //   }
+        // })
+      }
+    },
     methods: {
+      dateFormatter (timestamp) {
+        return timestampFormat(timestamp, 'mi')
+      },
       handleTagClose (tag) {
         this.tags.splice(this.tags.indexOf(tag), 1)
       },
@@ -628,12 +682,6 @@
         // })
       },
       openQuoteModal () {
-        getCusUsers({roleId: 3}, (data) => {
-          // console.log(data)
-          data.result.forEach((item) => {
-            this.cusUsers.push({value: item.id, text: item.nickname})
-          })
-        })
         this.$refs.quoteModal.show()
       },
       closeQuoteModal () {
@@ -654,13 +702,18 @@
         cusPrice(this.priceObj)
       },
       handleSubmit () {
-        this.names.push(this.name)
-        this.clearName()
-        this.$refs.quoteModal.hide()
+        // this.names.push(this.name)
+        // this.clearName()
+        // this.$refs.quoteModal.hide()
+      },
+      saveCusInfo () {
+        this.cusIntention.tripType = this.cusIntention.tripTypeArr.join(',')
+        cusSave({cusInfo: this.cusInfo, cusIntention: this.cusIntention})
       },
       cusFollow () {
         cusFollow({cusIntentionId: this.cusIntention.id, content: this.followContent})
       },
+      acceptPrice (id) {},
       sendMessage () {}
     }
   }
@@ -778,9 +831,13 @@
         overflow: auto;
         .message-item {
           margin-bottom: .5rem;
-          .timeIcon {
-            margin-right: .4rem;
-            font-size: 1rem;
+          .message-time {
+            display: flex;
+            align-items: center;
+            .timeIcon {
+              margin-right: .4rem;
+              font-size: 1rem;
+            }
           }
           .message-content {
             margin-left: 1.4rem;

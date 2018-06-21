@@ -80,3 +80,13 @@ export const cusFollow = (params, fn1, fn2) => {
     error: fn2
   }))
 }
+export const cusSave = (params, fn1, fn2) => {
+  return httpService(new HttpConfig({
+    url: '/cus/save',
+    method: 'post',
+    params: params,
+    reminder: true,
+    success: fn1,
+    error: fn2
+  }))
+}

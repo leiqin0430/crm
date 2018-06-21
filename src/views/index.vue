@@ -41,6 +41,10 @@
                 <!--<b-pagination :total-rows="tableData1.total" :per-page="perPage" v-model="currentPage" class="my-0" />-->
               <!--</div>-->
             <!--</div>-->
+            <div>
+              <!--<a href="#" @click="getMore">加载更多</a>-->
+              <b-link @click="getMore">加载更多</b-link>
+            </div>
           </div>
         </div>
         <div v-if="isInit" class="card card-border-color card-border-color-warning">
@@ -49,7 +53,8 @@
             <b-table responsive small hover
                      class="text-nowrap"
                      :fields="fields1"
-                     :items="tableData2.result">
+                     :items="tableData2.result"
+                     @row-clicked="rowClicked">
               <!-- A virtual column -->
               <template slot="index" slot-scope="data">
                 {{data.index + 1}}
@@ -112,7 +117,10 @@
           </div>
         </div>
         <div v-if="!isInit" class="card card-border-color card-border-color-dark">
-          <h5 class="card-header">搜索结果<b-button variant="link" @click="isInit = true">返回</b-button></h5>
+          <h5 class="card-header">搜索结果
+            <!--<b-button variant="link" @click="isInit = true">返回</b-button>-->
+            <b-link @click="isInit = true">返回</b-link>
+          </h5>
           <div class="card-body">
             <b-table responsive small hover
                      class="text-nowrap"
@@ -368,7 +376,7 @@
           key: 'acceptTime',
           label: '成交时间',
           formatter: (value, key, item) => {
-            return timestampFormat('mi', value)
+            return timestampFormat(value, 'mi')
           }
         },
         {key: 'intentionPoint', label: '特别说明'}
@@ -488,6 +496,15 @@
         getCusQuery({pageNum: 1, pageSize: 10, param: this.searchText}, (data) => {
           this.isInit = false
           this.tableData6 = data.page
+        })
+      },
+      getMore () {
+        getCusList({pageNum: 1, pageSize: 10, param: '1'}, (data) => {
+          // let result = data.page.result
+          this.tableData1.result = [...this.tableData1.result, ...data.page.result]
+          // result[0].id = 10
+          // this.tableData1.result.concat(result)
+          console.log(this.tableData1.result)
         })
       }
     }

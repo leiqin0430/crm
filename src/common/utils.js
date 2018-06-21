@@ -81,11 +81,11 @@ export const urlParse = () => {
 
 /**
  * 时间戳日期格式化
- * @param flag
  * @param timestamp
+ * @param flag
  * @returns {string}
  */
-export const timestampFormat = (flag, timestamp) => {
+export const timestampFormat = (timestamp, flag) => {
   if (!timestamp) {
     return ''
   }
